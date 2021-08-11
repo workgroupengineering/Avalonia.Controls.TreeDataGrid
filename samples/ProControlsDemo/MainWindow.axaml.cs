@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
-using Avalonia.VisualTree;
 using ProControlsDemo.Models;
 using ProControlsDemo.ViewModels;
+using System;
+using System.Collections.Generic;
 
 namespace ProControlsDemo
 {
@@ -25,7 +21,7 @@ namespace ProControlsDemo
             DataContext = new MainWindowViewModel();
             this.Find<Button>("my").Click += MainWindow_Click;
             _tabs = this.FindControl<TabControl>("tabs");
-            this.Find<TreeDataGrid>("fileViewer").CellPrepared += MainWindow_CellPrepared;
+            this.Find<TreeDataGrid>("countries").CellPrepared += MainWindow_CellPrepared;
             this.Find<Button>("remove").Click += MainWindow_Click1;
             this.Find<Button>("add").Click += MainWindow_Click2;
             //DispatcherTimer.Run(() =>
@@ -39,12 +35,12 @@ namespace ProControlsDemo
 
         private void MainWindow_Click2(object? sender, RoutedEventArgs e)
         {
-            this.Find<DockPanel>("ss").Children.Add(this.Find<TreeDataGrid>("fileViewer"));
+            this.Find<DockPanel>("ss").Children.Add(this.Find<TreeDataGrid>("countries"));
         }
 
         private void MainWindow_Click1(object? sender, RoutedEventArgs e)
         {
-            this.Find<DockPanel>("ss").Children.Remove(this.Find<TreeDataGrid>("fileViewer"));
+            this.Find<DockPanel>("ss").Children.Remove(this.Find<TreeDataGrid>("countries"));
         }
 
         private void MainWindow_CellPrepared(object? sender, TreeDataGridCellEventArgs e)
@@ -55,7 +51,7 @@ namespace ProControlsDemo
 
         private void MainWindow_Click(object? sender, RoutedEventArgs e)
         {
-            (this.Find<TreeDataGrid>("fileViewer").Source as HierarchicalTreeDataGridSource<FileTreeNodeModel>).Items = new List<FileTreeNodeModel>();
+            (this.Find<TreeDataGrid>("countries").Source as FlatTreeDataGridSource<Country>).Items = new List<Country>();
         }
 
         private void MainWindow_Activated(object? sender, EventArgs e)
@@ -71,27 +67,21 @@ namespace ProControlsDemo
 
         public void AddCountryClick(object sender, RoutedEventArgs e)
         {
-            var countryTextBox = this.FindControl<TextBox>("countryTextBox");
-            var regionTextBox = this.FindControl<TextBox>("regionTextBox");
-            var populationTextBox = this.FindControl<TextBox>("populationTextBox");
-            var areaTextBox = this.FindControl<TextBox>("areaTextBox");
-            var gdpTextBox = this.FindControl<TextBox>("gdpTextBox");
+            var tb = this.Find<TextBox>("countryTextBox");
+            if (tb.Text.Contains("-"))
+            {
+                var res = tb.Text.Split('-');
+                for (int i = Convert.ToInt32(res[1]); i >= Convert.ToInt32(res[0]); i--)
+                {
+                    ((MainWindowViewModel)DataContext!).Countries._data.RemoveAt(i);
+                }
 
-            var country = new Country(
-                countryTextBox.Text,
-                regionTextBox.Text,
-                int.TryParse(populationTextBox.Text, out var population) ? population : 0,
-                int.TryParse(areaTextBox.Text, out var area) ? area : 0,
-                0,
-                0,
-                null,
-                null,
-                int.TryParse(gdpTextBox.Text, out var gdp) ? gdp : 0,
-                null,
-                null,
-                null,
-                null);
-            ((MainWindowViewModel)DataContext!).Countries.AddCountry(country);
+            }
+            else
+            {
+                ((MainWindowViewModel)DataContext!).Countries._data.RemoveAt(Convert.ToInt32(tb.Text));
+            }
+
         }
 
         //private void UpdateRealizedCount()

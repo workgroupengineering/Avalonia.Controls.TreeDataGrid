@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using Avalonia.Controls.Models.TreeDataGrid;
+﻿using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Presenters;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Utilities;
 using Avalonia.VisualTree;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 
 namespace Avalonia.Controls.Primitives
 {
@@ -51,7 +51,7 @@ namespace Avalonia.Controls.Primitives
             set => SetAndRaise(ElementFactoryProperty, ref _elementFactory, value);
         }
 
-        public IReadOnlyList<TItem>? Items 
+        public IReadOnlyList<TItem>? Items
         {
             get => _items;
             set
@@ -501,18 +501,25 @@ namespace Avalonia.Controls.Primitives
             {
                 var first = _realizedElements.FirstIndex;
                 var last = _realizedElements.LastIndex;
-
-                if (index >= first && index <= last)
+                if (_realizedElements.FirstIndex == -1 && _realizedElements.LastIndex == -1 && _children.Count > 0)
                 {
-                    var removePoint = index - first;
+                    _children.RemoveRange(index, count);
+                }
+                else if ((index >= first && index <= last) || ((count - index) > first))
+                {
+                    var removePoint = index - first > 0 ? index - first : 0;
                     count = Math.Min(count, _realizedElements.Count - removePoint);
-
+                    if (count <= 0)
+                    {
+                        return;
+                    }
                     for (var i = 0; i < count; ++i)
                     {
                         if (_realizedElements.Elements[removePoint + i] is IControl element)
                             RecycleElement(element);
                     }
 
+                    _children.RemoveRange(removePoint, count);
                     _realizedElements.RemoveRange(removePoint, count);
 
                     for (var i = removePoint; i < _realizedElements.Count; ++i)
@@ -520,6 +527,7 @@ namespace Avalonia.Controls.Primitives
                         if (_realizedElements.Elements[i] is IControl element)
                             UpdateElementIndex(element, first + i);
                     }
+                
                 }
             }
 
