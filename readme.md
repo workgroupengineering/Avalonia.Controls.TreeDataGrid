@@ -1,3 +1,16 @@
+# **Unofficial Experimental package** of Avalonia `TreeDataGrid`
+
+__This repository is only for test__
+
+you can try this adding following nuget package source
+
+```bash
+dotnet nuget add source --name we "https://nuget.pkg.github.com/workgroupengineering/index.json"
+```
+
+[![Build and Test](https://github.com/workgroupengineering/Avalonia.Controls.TreeDataGrid/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/workgroupengineering/Avalonia.Controls.TreeDataGrid/actions/workflows/build-and-test.yml)
+
+____
 [![NuGet](https://img.shields.io/nuget/v/Avalonia.Controls.TreeDataGrid.svg)](https://www.nuget.org/packages/Avalonia.Controls.TreeDataGrid/)
 # Avalonia `TreeDataGrid`
 
