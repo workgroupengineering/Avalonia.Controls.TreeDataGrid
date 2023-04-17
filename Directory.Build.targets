@@ -3,4 +3,16 @@
     <VSTestLogger>trx%3bLogFileName=$(MSBuildProjectName).trx</VSTestLogger>
     <VSTestResultsDirectory>$(MSBuildThisFileDirectory)TestResults/</VSTestResultsDirectory>
   </PropertyGroup>
+
+  <Target Name="_UpdateNuspec"
+          BeforeTargets="GenerateNuspec"
+          Condition="'$(IsPackable)' == 'true' 
+           and '$(BRANCH_NAME)' == 'experimental'">
+    <PropertyGroup>
+      <PackageId>$(PackageId).Experimental</PackageId>
+      <PackageVersion Condition="'$(GITHUB_RUN_NUMBER)'!=''">$(PackageVersion)-$(GITHUB_RUN_NUMBER)</PackageVersion>
+      <PackageOutputAbsolutePath>$(MSBuildThisFileDirectory)Packages\</PackageOutputAbsolutePath>
+      <PackageDescription>(**Unofficial Experimental package**) $(PackageDescription)</PackageDescription>
+    </PropertyGroup>
+  </Target>
 </Project>
