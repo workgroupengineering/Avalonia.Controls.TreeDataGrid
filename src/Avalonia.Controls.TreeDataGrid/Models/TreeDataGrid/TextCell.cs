@@ -32,6 +32,7 @@ namespace Avalonia.Controls.Models.TreeDataGrid
             IsReadOnly = isReadOnly;
             TextTrimming = options?.TextTrimming ?? TextTrimming.None;
             SingleTapEdit = options?.SingleTapEdit ?? false;
+            TextAlignment = options?.TextAlignment ?? TextAlignment.Left;
 
             _subscription = binding.Subscribe(x =>
             {
@@ -44,6 +45,7 @@ namespace Avalonia.Controls.Models.TreeDataGrid
         public bool IsReadOnly { get; }
         public bool SingleTapEdit { get; }
         public TextTrimming TextTrimming { get; }
+        public TextAlignment TextAlignment { get; }
 
         public string? Text
         {

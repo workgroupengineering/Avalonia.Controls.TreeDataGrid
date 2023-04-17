@@ -19,10 +19,17 @@ namespace Avalonia.Controls.Primitives
                 o => o.Value,
                 (o, v) => o.Value = v);
 
+        public static readonly DirectProperty<TreeDataGridTextCell,TextAlignment> TextAlignmentProperty =
+            AvaloniaProperty.RegisterDirect < TreeDataGridTextCell, TextAlignment>(
+                nameof(TextAlignment),
+                o => o.TextAlignment,
+                (o,v)=> o.TextAlignment = v);
+
         private bool _canEdit;
         private string? _value;
         private TextBox? _edit;
         private TextTrimming _textTrimming = TextTrimming.CharacterEllipsis;
+        private TextAlignment _textAlignment = TextAlignment.Left;
 
         public TextTrimming TextTrimming
         {
@@ -40,6 +47,12 @@ namespace Avalonia.Controls.Primitives
             }
         }
 
+        public TextAlignment TextAlignment
+        {
+            get => _textAlignment;
+            set => SetAndRaise(TextAlignmentProperty, ref _textAlignment, value);
+        }
+
         protected override bool CanEdit => _canEdit;
 
         public override void Realize(TreeDataGridElementFactory factory, ICell model, int columnIndex, int rowIndex)
@@ -47,6 +60,7 @@ namespace Avalonia.Controls.Primitives
             _canEdit = model.CanEdit;
             Value = model.Value?.ToString();
             TextTrimming = (model as ITextCell)?.TextTrimming ?? TextTrimming.CharacterEllipsis;
+            TextAlignment = (model as ITextCell)?.TextAlignment ?? TextAlignment.Left;
             base.Realize(factory, model, columnIndex, rowIndex);
             SubscribeToModelChanges();
         }
