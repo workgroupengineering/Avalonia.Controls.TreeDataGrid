@@ -2,6 +2,7 @@ name: 'Test Report'
 on:
   workflow_run:
     workflows: ['Build and Test']                  # runs after CI workflow
+    branches: [experimental]
     types:
       - completed
 jobs:
