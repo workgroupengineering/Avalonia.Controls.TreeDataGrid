@@ -286,7 +286,7 @@ namespace Avalonia.Controls.Primitives
                 for (var i = start; i < elementCount; ++i)
                 {
                     if (_elements[i] is Control element)
-                        updateElementIndex(element, newIndex - count, newIndex);
+                        updateElementIndex(element, (newIndex - count) + first, newIndex + first);
                     ++newIndex;
                 }
 
@@ -294,6 +294,7 @@ namespace Avalonia.Controls.Primitives
                 {
                     // The insertion point was before the first element, update the first index.
                     _firstIndex += count;
+                    _startUUnstable = true;
                 }
                 else
                 {
